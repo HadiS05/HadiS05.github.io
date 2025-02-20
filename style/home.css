@@ -1,0 +1,26 @@
+html {
+    background-color: black;
+}
+
+p {
+    color: green;
+    font-weight: bold;
+    font-family: 'Roboto Mono', serif;
+    font-size: 1em;
+}
+
+input {
+    background-color: black;
+    color: green;
+    font-weight: bold;
+    font-family: 'Roboto Mono', serif;
+    font-size: 1em;
+}
+
+button {
+    background-color: black;
+    color: green;
+    font-weight: bold;
+    font-family: 'Roboto Mono', serif;
+    font-size: 1em;
+}
