@@ -9,12 +9,23 @@ p {
     font-size: 1em;
 }
 
+.path {
+    margin-right: 5px;
+}
+
 input {
     background-color: black;
     color: green;
     font-weight: bold;
     font-family: 'Roboto Mono', serif;
     font-size: 1em;
+    outline:none;
+    border: none;
+    flex-grow: 1;
+}
+
+.type {
+    display: flex;
 }
 
 button {
@@ -23,4 +34,16 @@ button {
     font-weight: bold;
     font-family: 'Roboto Mono', serif;
     font-size: 1em;
+}
+
+.success {
+    color: white;
+}
+
+.error {
+    color: red;
+}
+
+hr {
+    border: 1px dashed green;
 }

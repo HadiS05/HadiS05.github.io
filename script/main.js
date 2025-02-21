@@ -46,6 +46,7 @@ function new_line(){
   const div = document.createElement("div");
   div.setAttribute("class", "type")
   const input = document.createElement("input");
+  div.appendChild(p);
   div.appendChild(input);
   app.appendChild(div);
   input.focus();
@@ -79,15 +80,24 @@ async function getInputValue(){
     createText("Location: Ontario, Canada");
     createText("Education: McMaster University, Honours Computer Science, 2023-2027");
     createText("Awards: McMaster Award of Excellence, Dean's Honour List, McMaster EMBER Hackathon Winner");
+    const p = document.createElement("hr");
+    app.appendChild(p);
     createText("Technical Skills");
-    createText("Proficient Languages: Python, Java, C, Elm");
-    createText("Familiar Languages: Javascript, Flutter/Dart, SQL");
-    createText("Frameworks: Flask, Node.js, Kivy, JUnit, Bootstrap");
-    createText("Hobbies: Poetry, History, Philosophy, Literature, Movies, European Football, Cricket, Video Games")
+    createText("<i>Proficient Languages</i>: Python, Java, C, Elm");
+    createText("<i>Familiar Languages</i>: Javascript, Flutter/Dart, SQL");
+    createText("<i>Frameworks</i>: Flask, Node.js, Kivy, JUnit, Bootstrap");
+    createText("<i>Hobbies</i>: Poetry, History, Philosophy, Literature, Movies, European Football, Cricket, Video Games")
   }
   else if(value === "resume -d"){
     trueValue(value);
     createText("Downloading resume...");
+    const url = "./assets/Hadi_Shaheryar_Resume.pdf";
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = url.split('/').pop();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
   else if(value === "resume"){
     trueValue(value);
@@ -95,11 +105,12 @@ async function getInputValue(){
   }
   else if(value === "clear"){
     document.querySelectorAll("p").forEach(e => e.parentNode.removeChild(e));
+    document.querySelectorAll("hr").forEach(e => e.parentNode.removeChild(e));
     document.querySelectorAll("section").forEach(e => e.parentNode.removeChild(e));
   } else if(value === "contact"){
     trueValue(value);
     createText("You can contact me at <a href='mailto:haditutoring@gmail.com'>haditutoring@gmail.com<a/>");
-    createText("Our reach out to me on <a href='https://www.linkedin.com/in/hadi-shaheryar'>LinkedIn</a>");
+    createText("Or reach out to me on <a href='https://www.linkedin.com/in/hadi-shaheryar'>LinkedIn</a>");
   }
   else{
     falseValue(value);
@@ -112,7 +123,7 @@ function trueValue(value){
   div.setAttribute("class", "type2")
   const previouscommand = document.createElement("p");
   previouscommand.setAttribute("class", "success")
-  previouscommand.textContent = `${value}`;
+  previouscommand.textContent = `user@h-shaheryar:~$ ${value}`;
   div.appendChild(previouscommand);
   app.appendChild(div);
 }
@@ -122,7 +133,7 @@ function falseValue(value){
     div.setAttribute("class", "type2")
     const previouscommand = document.createElement("p");
     previouscommand.setAttribute("class", "error")
-    previouscommand.textContent = `${value}`;
+    previouscommand.textContent = `user@h-shaheryar:~$ ${value}`;
     div.appendChild(previouscommand);
     app.appendChild(div);
 }
