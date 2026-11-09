@@ -1,0 +1,34 @@
+{
+    "home_page_apps" : [
+        {
+            "title": "HBrowser",
+            "icon": "/assets/icons/web.svg"
+        },
+        {
+            "title": "File Explorer",
+            "icon": "/assets/icons/folder.svg"
+        },
+        {
+            "title": "News",
+            "icon": "/assets/icons/news_icon.svg"
+        },
+        {
+            "title": "Terminal",
+            "icon": "/assets/icons/terminal.svg"
+        }
+    ],
+    "task_bar_apps": [
+        {
+            "title": "File Explorer",
+            "icon": "/assets/icons/folder.svg"
+        },
+        {
+            "title": "News",
+            "icon": "/assets/icons/news_icon.svg"
+        },
+        {
+            "title": "Terminal",
+            "icon": "/assets/icons/terminal.svg"
+        }
+    ]
+}
