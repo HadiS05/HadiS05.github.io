@@ -51,7 +51,7 @@ const createTitledAppIcon = async function (svg_src, title) {
     const response = await fetch(svg_src);
 
     if (!response.ok) {
-      console.error("Could not fetch svg icon.");
+      console.error("Could not fetch icon.");
       return;
     }
 
@@ -97,6 +97,39 @@ const createAppIcon = async function (svg_src, title = null) {
   }
 }
 
+const fetchIcon = async function (svg_src) {
+  try 
+  {
+    const response = await fetch(svg_src);
+
+    if (!response.ok) {
+      console.error(`Could not fetch icon: ${response.status}`);
+      return;
+    }
+
+    const svg_text = await response.text();
+
+    return svg_text;
+  }
+  catch (err) 
+  {
+    console.error(err);
+  }
+}
+
+const populateAllIcons = async function () {
+  const iconDivs = document.querySelectorAll(".icon");
+
+  iconDivs.forEach(async (div) => {
+    if (!div.dataset.path) return;
+
+    const icon = await fetchIcon(div.dataset.path);
+
+    div.innerHTML = icon;
+
+  });
+}
+
 async function init () {
   config = await fetchConfig();
 
@@ -126,3 +159,4 @@ async function init () {
 }
 
 init();
+populateAllIcons();
