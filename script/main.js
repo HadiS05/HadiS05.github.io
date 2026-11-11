@@ -42,32 +42,20 @@ const template_content = document.querySelector("template").content;
 const template = document.importNode(template_content, true);
 
 // View-related functions
-const createTitledAppIcon = async function (svg_src, title) {
+const createTitledAppIcon = async function (src, title) {
   const titledAppTemplate = template.querySelector(".icon-title-card").cloneNode(true);
 
-  // Try to fetch svg
-  try 
-  {
-    const response = await fetch(svg_src);
+  let iconHtml = `<img src="${src}">`;
 
-    if (!response.ok) {
-      console.error("Could not fetch icon.");
-      return;
-    }
-
-    const svgText = await response.text();
-
-
-    titledAppTemplate.querySelector(".app-title").textContent = title;
-    titledAppTemplate.querySelector(".app-icon").innerHTML = svgText;
-    titledAppTemplate.title = title;
-
-    return titledAppTemplate;
-  } catch (err) 
-  {
-    console.error(err);
-    return;
+  if (src.endsWith(".svg")) {
+    iconHtml = await fetchIcon(src);
   }
+  // Try to fetch image
+  titledAppTemplate.querySelector(".app-title").textContent = title;
+  titledAppTemplate.querySelector(".app-icon").innerHTML = iconHtml;
+  titledAppTemplate.title = title;
+
+  return titledAppTemplate;
 }
 
 const createAppIcon = async function (svg_src, title = null) {

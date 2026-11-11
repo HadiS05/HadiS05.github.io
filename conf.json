@@ -2,15 +2,15 @@
     "home_page_apps" : [
         {
             "title": "HBrowser",
-            "icon": "/assets/icons/web.svg"
+            "icon": "/assets/img/web.png"
         },
         {
             "title": "File Explorer",
-            "icon": "/assets/icons/folder.svg"
+            "icon": "/assets/img/folder.png"
         },
         {
             "title": "News",
-            "icon": "/assets/icons/news_icon.svg"
+            "icon": "/assets/img/news.png"
         },
         {
             "title": "Terminal",
