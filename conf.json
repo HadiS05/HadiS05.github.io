@@ -1,34 +1,42 @@
 {
-    "home_page_apps" : [
-        {
+    "home_page_apps" : {
+        "web": {
             "title": "HBrowser",
             "icon": "/assets/img/web.png"
         },
-        {
+        "file_explorer": {
             "title": "File Explorer",
             "icon": "/assets/img/folder.png"
         },
-        {
+        "news": {
             "title": "News",
             "icon": "/assets/img/news.png"
         },
-        {
+        "terminal": {
             "title": "Terminal",
             "icon": "/assets/icons/terminal.svg"
         }
-    ],
-    "task_bar_apps": [
-        {
+    },
+    "task_bar_apps": {
+        "file_explorer": {
             "title": "File Explorer",
-            "icon": "/assets/icons/folder.svg"
+            "icon": "/assets/icons/folder.svg",
+            "start": true
         },
-        {
+        "news": {
             "title": "News",
-            "icon": "/assets/icons/news_icon.svg"
+            "icon": "/assets/icons/news_icon.svg",
+            "start": true
         },
-        {
+        "terminal": {
             "title": "Terminal",
-            "icon": "/assets/icons/terminal.svg"
+            "icon": "/assets/icons/terminal.svg",
+            "start": true
+        },
+        "web": {
+            "title": "HBrowser",
+            "icon": "/assets/icons/web.svg",
+            "start": false
         }
-    ]
+    }
 }
