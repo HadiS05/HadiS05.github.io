@@ -45,14 +45,21 @@
         const closeBtn = appWindow.querySelector(".close-btn");
 
         resizeBtn.addEventListener('click', (e) => {
+            appWindow.classList.add('transition-[width,height]');
             appWindow.classList.toggle("resize");
             
             // Remove any inline styling
             appWindow.style = "";
+            appWindow.classList.add("center-window");
+            
+            setTimeout(() => {
+                appWindow.classList.remove('transition-[width,height]');
+                appWindow.parentElement.appendChild(appWindow);
+
+            }, 500);
         });
 
         const minimize = function (state = true) {
-            appWindow.style = "";
 
             if (state) 
             {
@@ -80,8 +87,6 @@
         minimizeBtn.addEventListener('click', minimize);
 
         const close = function () {
-            appWindow.style = "";
-
             appWindow.classList.add(
                 "opacity-0"
             );
@@ -99,53 +104,88 @@
 
 
         // Allow appWindow to be dragged by status bar
-        // const statusBar = appWindow.querySelector(".status-bar");
+        const statusBar = appWindow.querySelector(".status-bar");
 
-        // const getTranslateCoordinates = function (element) {
-        //     const style = getComputedStyle(element);
-        //     const matrix = new DOMMatrix(style.transform);
+        const getCoordinates = (el) => {
+            const rect = el.getBoundingClientRect();
+            return [rect.left, rect.top];
+        };
 
-        //     return {
-        //         x: matrix.m41,
-        //         y: matrix.m42
-        //     };
-        // }
+        const [currentX, currentY] = getCoordinates(appWindow);
 
-        // const appWindowCoords = getTranslateCoordinates(appWindow);
+        let offsetX = currentX;
+        let offsetY = currentY;
 
-        // let currentX = appWindowCoords.x;
-        // let currentY = appWindowCoords.y;
-        // let startX = 0;
-        // let startY = 0;
-        // let ticking = false;
+        const onPointerMove = (e) => {
+            const currentX = e.clientX - offsetX;
+            const currentY = e.clientY - offsetY;
 
-        // const onPointerMove = function (e) {
-        //     currentX = e.clientX - startX;
-        //     currentY = e.clientY - startY;
+            console.log("pointermove clientX clientY", e.clientX, e.clientY);
+            console.log("pointermove currentX currentY", currentX, currentY);
 
-        //     // Only schedule one visual update per screen refresh frame
-        //     if (!ticking) {
-        //     requestAnimationFrame(() => {
-        //         appWindow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-        //         ticking = false;
-        //     });
-        //     ticking = true;
-        //     }
-        // }
+            appWindow.style.top = currentY + 'px';
+            appWindow.style.left = currentX + 'px';
+        };
+        
+        statusBar.addEventListener("pointerdown", (e) => {
+            if (e.target.closest('button')) return;
 
-        // statusBar.addEventListener("pointerdown", (e) => {
-        //     // Record starting pointer position relative to current translation
-        //     startX = e.clientX - currentX;
-        //     startY = e.clientY - currentY;
+            const wasMaximized = !appWindow.classList.contains("resize");
 
-        //     statusBar.setPointerCapture(e.pointerId);
-        //     statusBar.addEventListener("pointermove", onPointerMove);
-        // });
+            appWindow.classList.add("resize");
+            appWindow.classList.add("dragging");
 
-        // statusBar.addEventListener("pointerup", (e) => {
-        //     statusBar.releasePointerCapture(e.pointerId);
-        //     statusBar.removeEventListener("pointermove", onPointerMove);
-        // });
+            const [currentX, currentY] = getCoordinates(appWindow);
+            const parentRect = appWindow.offsetParent.getBoundingClientRect();
+
+            if (wasMaximized) {
+                offsetX = appWindow.offsetWidth / 2;
+                offsetY = e.clientY - currentY;
+            } else {
+                offsetX = e.clientX - currentX;
+                offsetY = e.clientY - currentY;
+            }
+
+            const startLeft = wasMaximized ? (e.clientX - offsetX - parentRect.left) : (currentX - parentRect.left);
+            const startTop = currentY - parentRect.top;
+
+            appWindow.style.left = `${startLeft}px`;
+            appWindow.style.top = `${startTop}px`;
+
+            appWindow.classList.remove("center-window");
+
+            statusBar.setPointerCapture(e.pointerId);
+            statusBar.addEventListener("pointermove", onPointerMove);
+        });
+
+
+        statusBar.addEventListener("pointerup", (e) => {
+            appWindow.classList.remove("dragging");
+            statusBar.releasePointerCapture(e.pointerId);
+            statusBar.removeEventListener("pointermove", onPointerMove);
+        });
+
+        // Fetch and set content
+        do {
+            if (!program) break;
+
+            const programHtml = await loadDetachedHTML(`/${program}/${program}.css`);
+            const programCssRaw = await loadDetachedStylesheet(`/${program}/${program}.css`);
+
+            if (!programHtml) break;
+
+            const programId = "c-"+crypto.randomUUID();
+
+            programHtml.id = programId;
+            const programCss = programCssRaw.replaceAll('this', `#${programId}`);
+
+            if (programCss) {
+                const style = document.createElement("style");
+                style.textContent = program;
+                document.head.appendChild(style);
+            }
+
+        } while (false);
 
         desktop.append(apploaderHtml);
         // Fade in
@@ -167,25 +207,35 @@
 /* Load an HTML document into memory */
 window.loadDetachedHTML = async function (url) {
 
-  const response = await fetch(url);
-  const htmlString = await response.text();
+ try {
+    const response = await fetch(url);
+    const htmlString = await response.text();
 
-  const div = document.createElement("div");
+    const div = document.createElement("div");
 
-  div.innerHTML = htmlString;
+    div.innerHTML = htmlString;
 
-  return div;
+    return div;
+ } catch (e) {
+    console.error(e);
+    return null;
+ }
+
 }
 
 /* Load a CSS stylesheet as a string */
 window.loadDetachedStylesheet = async function (url) {
 
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error(`Failed to load CSS: ${response.status}`);
+    if (!response.ok) {
+        throw new Error(`Failed to load CSS: ${response.status}`);
+    }
+    const cssText = await response.text();
+
+    return cssText;
+  } catch (e) {
+    return "";
   }
-  const cssText = await response.text();
-
-  return cssText;
 }

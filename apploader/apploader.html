@@ -1,5 +1,5 @@
 <!-- Template for window -->
-<div class="window min-w-[200px] sm:min-w-[450px] md:min-w-[600px] transition-all duration-500 resize">
+<div class="window min-w-[200px] sm:min-w-[450px] md:min-w-[600px] transition-[opacity,transform] center-window duration-500 resize">
     <div class="status-bar transition-colors bg-gray-300/60">
         <button class="minimize-btn hover:bg-black/10 py-2 px-4 duration-300">
             <i class="bi bi-dash-lg"></i>
@@ -13,6 +13,9 @@
     </div>
 
     <div class="content bg-white">
-        Content
+        <div class="flex flex-row p-[20px] gap-4 items-center justify-center">
+            <img src="/assets/img/sadtab.png" class="max-w-100">
+            <span class="font-mono">Aw snap...looks like that app doesn't exist.</span>
+        </div>
     </div>
 </div>
