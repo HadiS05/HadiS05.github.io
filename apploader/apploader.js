@@ -35,6 +35,7 @@
 
         if (appCss) {
             const style = document.createElement("style");
+            style.classList.add(uniqueId);
             style.textContent = appCss;
             document.head.appendChild(style);
         }
@@ -166,26 +167,22 @@
         });
 
         // Fetch and set content
-        do {
-            if (!program) break;
+        programPackage = await loadProgram(program);
 
-            const programHtml = await loadDetachedHTML(`/${program}/${program}.css`);
-            const programCssRaw = await loadDetachedStylesheet(`/${program}/${program}.css`);
+        if (programPackage.html) {
 
-            if (!programHtml) break;
-
-            const programId = "c-"+crypto.randomUUID();
-
-            programHtml.id = programId;
-            const programCss = programCssRaw.replaceAll('this', `#${programId}`);
-
-            if (programCss) {
-                const style = document.createElement("style");
-                style.textContent = program;
-                document.head.appendChild(style);
+            if (programPackage.js) {
+                const script = document.createElement("script");
+                script.textContent = programPackage.js;
+                programPackage.html.append(script);
             }
 
-        } while (false);
+            if (programPackage.css) {
+                document.head.appendChild(programPackage.css);
+            }
+
+            appWindow.querySelector(".content").replaceChildren(programPackage.html);       
+        }
 
         desktop.append(apploaderHtml);
         // Fade in
@@ -209,6 +206,11 @@ window.loadDetachedHTML = async function (url) {
 
  try {
     const response = await fetch(url);
+
+    if (!response.ok) { 
+        throw new Error(`Failed to load HTML: ${response.status}`);
+    }
+
     const htmlString = await response.text();
 
     const div = document.createElement("div");
@@ -236,6 +238,55 @@ window.loadDetachedStylesheet = async function (url) {
 
     return cssText;
   } catch (e) {
+    console.error(e);
     return "";
   }
+}
+
+/* Load a JS file as a string */
+window.loadDetachedJS = async function (url) {
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`Failed to load JS: ${response.status}`);
+    }
+    const jsText = await response.text();
+
+    return jsText;
+  } catch (e) {
+    console.error(e);
+    return "";
+  }
+}
+
+const loadProgram = async function (program) {
+    let result = {};
+
+    if (!program) return result;
+
+    const programHtml = await loadDetachedHTML(`/${program}/${program}.html`);
+    const programCssRaw = await loadDetachedStylesheet(`/${program}/${program}.css`);
+    const programJs = await loadDetachedJS(`/${program}/${program}.js`);
+
+    if (!programHtml) return result;
+
+    const programId = "c-"+crypto.randomUUID();
+
+    programHtml.id = programId;
+    result.html = programHtml;
+
+    const programCss = programCssRaw.replaceAll('this', `#${programId}`);
+
+    if (programCss) {
+        const style = document.createElement("style");
+        style.classList.add(programId);
+        style.textContent = programCss;
+        result.css = style;
+    }
+
+    if (programJs) result.js = programJs;
+
+    return result;
 }

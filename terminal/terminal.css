@@ -1,0 +1,53 @@
+this {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+this .terminal-screen {
+    overflow: auto;
+}
+
+this p {
+    color: green;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+this .path {
+    margin-right: 5px;
+}
+
+this input {
+    background-color: black;
+    color: green;
+    font-weight: bold;
+    font-size: 1em;
+    outline:none;
+    border: none;
+    flex-grow: 1;
+}
+
+this .type {
+    display: flex;
+}
+
+this button {
+    background-color: black;
+    color: green;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+this .success {
+    color: white;
+}
+
+this .error {
+    color: red;
+}
+
+this hr {
+    border: 1px dashed green;
+}
