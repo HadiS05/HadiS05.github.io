@@ -30,8 +30,8 @@
         // Assign a unique id to this component's parent
         const uniqueId = 'id-'+crypto.randomUUID();
 
-        apploaderHtml.id = uniqueId;
-        const appCss = apploaderCssRaw.replaceAll('this', `#${uniqueId}`);
+        apploaderHtml.classList.add(uniqueId);
+        const appCss = apploaderCssRaw.replaceAll('this', `.${uniqueId}`);
 
         if (appCss) {
             const style = document.createElement("style");
@@ -41,6 +41,10 @@
         }
 
         const appWindow = apploaderHtml.querySelector(".window");
+
+        const programApp = await loadProgram(program);
+        programApp.loadView(appWindow);
+
         const resizeBtn = appWindow.querySelector(".resize-btn");
         const minimizeBtn = appWindow.querySelector(".minimize-btn");
         const closeBtn = appWindow.querySelector(".close-btn");
@@ -94,7 +98,8 @@
 
             setTimeout(() => {
                 delete app.window;
-                apploaderHtml.remove();
+                document.querySelectorAll(`.${uniqueId}`).forEach(el => el.remove());
+                programApp.unloadView();
                 app.dispatchEvent(new Event('update'));
             }, 300);
         }
@@ -165,24 +170,6 @@
             statusBar.releasePointerCapture(e.pointerId);
             statusBar.removeEventListener("pointermove", onPointerMove);
         });
-
-        // Fetch and set content
-        programPackage = await loadProgram(program);
-
-        if (programPackage.html) {
-
-            if (programPackage.js) {
-                const script = document.createElement("script");
-                script.textContent = programPackage.js;
-                programPackage.html.append(script);
-            }
-
-            if (programPackage.css) {
-                document.head.appendChild(programPackage.css);
-            }
-
-            appWindow.querySelector(".content").replaceChildren(programPackage.html);       
-        }
 
         desktop.append(apploaderHtml);
         // Fade in
@@ -262,31 +249,41 @@ window.loadDetachedJS = async function (url) {
 }
 
 const loadProgram = async function (program) {
-    let result = {};
-
-    if (!program) return result;
-
-    const programHtml = await loadDetachedHTML(`/${program}/${program}.html`);
-    const programCssRaw = await loadDetachedStylesheet(`/${program}/${program}.css`);
-    const programJs = await loadDetachedJS(`/${program}/${program}.js`);
-
-    if (!programHtml) return result;
+    if (!program) return {};
 
     const programId = "c-"+crypto.randomUUID();
 
-    programHtml.id = programId;
-    result.html = programHtml;
+    return {
+        loadView: async (appWindow) => {
+            const programHtml = await loadDetachedHTML(`/${program}/${program}.html`);
+            const programCssRaw = await loadDetachedStylesheet(`/${program}/${program}.css`);
+            const programJs = await loadDetachedJS(`/${program}/${program}.js`);
 
-    const programCss = programCssRaw.replaceAll('this', `#${programId}`);
+            if (!programHtml) return;
 
-    if (programCss) {
-        const style = document.createElement("style");
-        style.classList.add(programId);
-        style.textContent = programCss;
-        result.css = style;
+            programHtml.classList.add(programId);
+
+            const programCss = programCssRaw.replaceAll('this', `.${programId}`);
+
+            if (programCss) {
+                const style = document.createElement("style");
+                style.classList.add(programId);
+                style.textContent = programCss;
+                document.head.appendChild(style);
+            }
+
+            if (programJs) {
+                const script = document.createElement("script");
+                script.classList.add(programId);
+                script.textContent = programJs;
+                programHtml.append(script);
+            }
+
+            appWindow.querySelector(".content").replaceChildren(programHtml);
+        },
+        unloadView : () => {
+            document.querySelectorAll(`.${programId}`).forEach(el => el.remove());
+        }
     }
-
-    if (programJs) result.js = programJs;
-
-    return result;
+    
 }

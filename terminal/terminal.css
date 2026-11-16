@@ -7,47 +7,32 @@ this {
 
 this .terminal-screen {
     overflow: auto;
-}
-
-this p {
-    color: green;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-this .path {
-    margin-right: 5px;
-}
-
-this input {
     background-color: black;
     color: green;
-    font-weight: bold;
-    font-size: 1em;
-    outline:none;
+}
+
+this .terminal-input {
+    text-decoration: none;
+    background-color: inherit;
+    color: inherit;
     border: none;
-    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    caret-shape: block;
+
+    &:focus,
+    &:focus-visible {
+        border: none;
+        text-decoration: none;
+        outline: none;
+    }
 }
 
-this .type {
-    display: flex;
-}
-
-this button {
-    background-color: black;
-    color: green;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-this .success {
-    color: white;
-}
-
-this .error {
+this .terminal-error {
     color: red;
 }
 
-this hr {
-    border: 1px dashed green;
+this .t-input span {
+    padding-right: 5px;
 }

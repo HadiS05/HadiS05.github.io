@@ -1,154 +1,307 @@
-const screen = document.querySelector(".terminal-screen");
-const delay = ms => new Promise(res => setTimeout(res, ms));
-    
-    
-screen.addEventListener("keypress", async function(event){
-  if(event.key === "Enter"){
-    await delay(150);
-   getInputValue();
-   
-    removeInput();
-    await delay(150);
-    new_line();
-  }
-});
-
-screen.addEventListener("click", function(event){
-  const input = document.querySelector("input");
-  input.focus();
-})
-
-
-async function open_terminal(){
-  createText("Welcome");
-  await delay(700);
-  createText("Booting...");
-  await delay(1500);
-  createText("You can run several commands:");
- 
-  createCode("about me", "Learn more about me.");
-  createCode("projects", "Check out my projects.");
-  createCode("contact", "Get in touch with me.");
-  createCode("resume -d", "Download my resume.");
-  createCode("all", "See all commands.");
-
-  await delay(500);
-  new_line();
-}
-
-
-function new_line(){
+!async function () {
+  const screen = document.querySelector(".terminal-screen");
+  const delay = ms => new Promise(res => setTimeout(res, ms));
   
-  const p = document.createElement("p");
-  p.setAttribute("class", "path")
-  p.textContent = "user@h-shaheryar:~$";
-  screen.appendChild(p);
-  const div = document.createElement("div");
-  div.setAttribute("class", "type")
-  const input = document.createElement("input");
-  div.appendChild(p);
-  div.appendChild(input);
-  screen.appendChild(div);
-  input.focus();
-}
+  const data = await async function () {
+    try {
+      const response = await fetch("/terminal/data.json");
+      
+      if (!response.ok) {
+        console.error("Error fetching data.", response.status);
+        return {};
+      }
 
-function removeInput(){
-  const div = document.querySelector(".type");
-  screen.removeChild(div);
-}
+      const json = await response.json();
 
-async function getInputValue(){
-  
-  const value = document.querySelector("input").value;
-  if(value === "all"){
-    trueValue(value);
+      return json || {};
+    }
+    catch (e) {
+      console.error(e);
+      return {};
+    }
+  }();
+
+  const cmds = {
+    'about' : (option) => {
+      const about = data.about ?? {};
+
+      const options = {
+        "--help": () => {
+          createText("View Information About Hadi.");
+          createText("-v: Show verbose information.");
+          createText("-h: View hobbies.");
+          createText("-w: View work information.");
+          createText("-a: View academic information.");
+        },
+        "-v": () => {
+          createText("Hadi Shaheryar");
+          createText(about.description);
+          createText("===");
+          createText("Hobbies:");
+
+          for (const [heading, info] of Object.entries(about.hobbies)) {
+            createText(`* ${heading}`);
+            createText(`- ${info.description}`);
+          }
+
+          createText("===");
+          createText("Academics:");
+
+          for (const [academic, info] of Object.entries(about.academics)) {
+            createText(`==${academic}==`);
+            createText(info.date);
+            createText(`GPA: ${info.gpa}`);
+            createText(info.description);
+
+            createText("Relevant Courses:");
+            info.relevant_courses.forEach((course) => createText(`- ${course}`));
+
+          }
+
+          createText("===");
+          createText("Work Experience:");
+
+          for (const [work, info] of Object.entries(about.work_experience)) {
+            createText(`* ${work}`);
+            createText(`Company: ${info.company}`);
+            createText(`Date: ${info.date}`);
+            createText(`Location: ${info.location}`);
+          }
+        },
+        "-h": () => {
+          createText("Hobbies:");
+
+          for (const [heading, info] of Object.entries(about.hobbies)) {
+            createText(`* ${heading}`);
+            createText(`- ${info.description}`);
+          }
+        },
+        "-w" : () => {
+          createText("Work Experience:");
+
+          for (const [work, info] of Object.entries(about.work_experience)) {
+            createText(`* ${work}`);
+            createText(`Company: ${info.company}`);
+            createText(`Date: ${info.date}`);
+            createText(`Location: ${info.location}`);
+          }
+        },
+        "-a" : () => {
+          createText("Academics:");
+
+          for (const [academic, info] of Object.entries(about.academics)) {
+            createText(`==${academic}==`);
+            createText(info.date);
+            createText(`GPA: ${info.gpa}`);
+            createText(info.description);
+
+            createText("Relevant Courses:");
+            info.relevant_courses.forEach((course) => createText(`- ${course}`));
+
+          }
+        }
+      }
+
+      if (option && options[option]) options[option]();
+      else {
+        createText("Invalid command structure identified.", 'error');
+      }
+    },
+    'contact' : (option) => {
+      const contact = data.contact ?? {};
+
+      const options = {
+        "--help": () => {
+          createText("View Hadi's Contact Information.");
+          createText("-a: Show all contact info.");
+          createText("-e: Show e-mail.");
+          createText("-p: Show phone.");
+        },
+        "-a": () => {
+          createText("Hadi Shaheryar");
+          createText(contact.email ?? "E-mail N/A");
+          createText(contact.phone ?? "Phone N/A");
+        },
+        "-e": () => {
+          createText(`E-mail: <i>${contact.email ?? "N/A"}</i>`);
+        },
+        "-p" : () => {
+          createText(`Phone Number: <i>${contact.phone ?? "N/A"}</i>`);
+        }
+      }
+
+      if (option && options[option]) options[option]();
+      else {
+        createText("Invalid command structure identified.", 'error');
+      }
+    },
+    'resume' : (option) => {
+      const resume = data.resume ?? {};
+
+      const options = {
+        "--help": () => {
+          createText("View Hadi's resume.");
+          createText("-d: Download resume.");
+        },
+        "-d": () => {
+          createText("Downloading resume...");
+          createText("===");
+
+          const a = document.createElement('a');
+          a.href = resume.file ?? "";
+          a.download = "Hadi_Shaheryar_Resume_" + Date.now();
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }
+
+      if (option && options[option]) options[option]();
+      else {
+        createText("Invalid command structure identified.", 'error');
+      }
+    },
+    'projects': (option) => {
+
+      const projects = data.projects ?? {};
+
+      const options = {
+        "--help": () => {
+          createText("View Hadi's projects.");
+          createText("-a: Show all projects.");
+          createText("-g: View GitHub projects.");
+          createText("-v: Verbose projects list.");
+        },
+        "-a": () => {
+          createText("All projects:");
+          createText("===");
+
+          for (const [project, data] of Object.entries(projects)) {
+            createText(`* Project: ${project}`);
+            createText(`Date: ${data.date}`);
+            createText(`Role: ${data.role}`);
+            createText("====")
+          }
+
+        },
+        "-g": () => {
+          createText("GitHub projects:");
+          createText("===");
+          
+          for (const [project, data] of Object.entries(projects)) {
+            if (!data.github) continue;
+
+            createText(`* Project: ${project}`);
+            createText(`GitHub: <a href="${data.github}" target="_blank">${data.github}</a>`);
+            createText("====")
+          }
+        },
+        "-v" : () => {
+          createText("Verbose projects list:");
+          createText("===");
+
+          for (const [project, data] of Object.entries(projects)) {
+            createText(`* Project: ${project}`);
+            createText(`Date: ${data.date}`);
+            createText(`Role: ${data.role}`);
+            createText(`Description: ${data.description}`);
+            createText(`GitHub: <a href="${data.github}" target="_blank">${data.github}</a>`);
+            data.points.forEach(point => createText(`- ${point}`));
+            createText("====")
+          }
+        }
+      }
+
+      if (option && options[option]) options[option]();
+      else {
+        createText("Invalid command structure identified.", 'error');
+      }
+    },
+    'clear' : (option = null) => {
+
+      if (option && option === "--help") {
+        createText("Simply type 'clear' to clear the terminal screen.");
+        return;
+      }
+
+      screen.replaceChildren();
+    },
+    'help': async () => {
+      await createText("You may run the following commands:");
     
-    createCode("about me", "Learn more about me.");
-    createCode("projects", "Check out my projects.");
-    createCode("contact", "Get in touch with me.");
-    createCode("resume -d", "Download my resume.");
-    createCode("clear", "Clear the terminal.");
-    
-  }
-  else if(value === "projects"){
-    trueValue(value);
-    createText("<a href='https://github.com/HadiS05'>Click here to view my GitHub.</a>")
-  }
-  else if(value === "about me"){
-    trueValue(value);
-    createText("Name: Hadi Shaheryar");
-    createText("Location: Ontario, Canada");
-    createText("Education: McMaster University, Honours Computer Science, 2023-2027");
-    createText("Awards: McMaster Award of Excellence, Dean's Honour List, McMaster EMBER Hackathon Winner");
-    const p = document.createElement("hr");
-    screen.appendChild(p);
-    createText("Technical Skills");
-    createText("<i>Proficient Languages</i>: Python, Java, C, Elm");
-    createText("<i>Familiar Languages</i>: Javascript, Flutter/Dart, SQL");
-    createText("<i>Frameworks</i>: Flask, Node.js, Kivy, JUnit, Bootstrap");
-    createText("<i>Hobbies</i>: Poetry, History, Philosophy, Literature, Movies, European Football, Cricket, Video Games")
-  }
-  else if(value === "resume -d"){
-    trueValue(value);
-    createText("Downloading resume...");
-    const url = "./assets/Hadi_Shaheryar_Resume.pdf";
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = url.split('/').pop();
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-  else if(value === "resume"){
-    trueValue(value);
-    createText("Did you mean 'resume -d'?");
-  }
-  else if(value === "clear"){
-    document.querySelectorAll("p").forEach(e => e.parentNode.removeChild(e));
-    document.querySelectorAll("hr").forEach(e => e.parentNode.removeChild(e));
-    document.querySelectorAll("section").forEach(e => e.parentNode.removeChild(e));
-  } else if(value === "contact"){
-    trueValue(value);
-    createText("You can contact me at <a href='mailto:haditutoring@gmail.com'>haditutoring@gmail.com<a/>");
-    createText("Or reach out to me on <a href='https://www.linkedin.com/in/hadi-shaheryar'>LinkedIn</a>");
-  }
-  else{
-    falseValue(value);
-    createText(`command not found: ${value}`)
-  }
-}
+      for (const cmd of Object.keys(cmds)) {
+        await createText(cmd);
+      }
 
-function trueValue(value){
-  const div = document.createElement("section");
-  div.setAttribute("class", "type2")
-  const previouscommand = document.createElement("p");
-  previouscommand.setAttribute("class", "success")
-  previouscommand.textContent = `user@h-shaheryar:~$ ${value}`;
-  div.appendChild(previouscommand);
-  screen.appendChild(div);
-}
+      await createText("For more information about each command, include --help");
+    }
+  };
+      
+  screen.addEventListener("keypress", async function(event){
+    if(event.key === "Enter"){
+      submitValue();
+    }
+  });
 
-function falseValue(value){
-    const div = document.createElement("section");
-    div.setAttribute("class", "type2")
-    const previouscommand = document.createElement("p");
-    previouscommand.setAttribute("class", "error")
-    previouscommand.textContent = `user@h-shaheryar:~$ ${value}`;
-    div.appendChild(previouscommand);
-    screen.appendChild(div);
-}
+  screen.addEventListener("click", function(event){
+    const input = document.querySelector("input");
+    input.focus();
+  });
 
-function createText(text, classname){
-  const p = document.createElement("p");
-  p.innerHTML = text;
-  screen.appendChild(p);
-}
+  const createText = async function (text, status = null) {
+    await delay(150);
+    const textEl = document.createElement("p");
+    textEl.classList.add("terminal-text");
+    if (status) textEl.classList.add(`terminal-${status}`);
+    textEl.innerHTML = text;
+    screen.append(textEl);
+    refreshInput();
+  };
 
-function createCode(code, text){
-  const p = document.createElement("p");
-  p.setAttribute("class", "code");
-  p.innerHTML =`${code} <br/><span class='text'> ${text} </span>`;
-  screen.appendChild(p);
-}
+  const createInput = function () {
+    const input = document.createElement("input");
+    input.classList.add("terminal-input");
 
-open_terminal();
+    return input;
+  };
+
+  const refreshInput = function () {
+    screen.querySelector(".t-input")?.remove();
+
+    const username = document.createElement("span");
+    username.textContent = "user@hadis05.github.io:~$";
+
+    const input = createInput();
+
+    const inputDiv = document.createElement("div");
+    inputDiv.classList.add("t-input");
+    inputDiv.append(username);
+    inputDiv.append(input);
+
+    screen.append(inputDiv);
+
+    input.focus();
+  };
+
+  const submitValue = async function () {
+    const input = screen.querySelector(".terminal-input");
+
+    const values = input.value.trim().split(/\s+/);
+
+    const cmd = values[0];
+
+    await createText("user@hadis05.github.io:~$ " + input.value);
+
+    if (!cmds[cmd]) {
+      await createText(`${cmd}: command not found`, 'error');
+    }
+    else cmds[cmd](...values.slice(1));
+
+    refreshInput();
+  };
+
+  createText("Hadi's Web Shell");
+  createText("v1.0 2026-11-15");
+
+  cmds['help']();
+}();
