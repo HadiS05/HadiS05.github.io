@@ -3,10 +3,10 @@
  * Create a container for an inner app to function
  * Display error message if app is not found
  * 
- * @param app : String (required): name of app
- * @param desktop: HTML element (required): Parent container
- * @param options : Object (optional) : specify appWindow options
- *                  (fullscreen, resize) 
+ * @param {String} app: (required) name of app
+ * @param {HTMLElement} desktop: (required) Parent container
+ * @param {object} [options={}]: (optional) specify appWindow options
+ *  
  */
 
 !async function($) {

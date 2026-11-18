@@ -1,0 +1,102 @@
+{
+    "projects": {
+        "Portfolio": {
+            "github": "https://github.com/HadiS05/HadiS05.github.io",
+            "description": "My web portfolio, designed as a desktop view.",
+            "date": "November 2026",
+            "role": "Creator",
+            "points": [
+                "Developed in native JS and Tailwind CSS.",
+                "Utilized modular approach for ease of feature-expansion."
+            ]
+        },
+        "HPDF": {
+            "github": "https://github.com/HadiS05/HPDF",
+            "description": "JVM Application implementing basic PDF manipulation tools.",
+            "date": "August 2026",
+            "role": "Creator",
+            "points": [
+                "Utilized Kotlin/Java, implementing an MVC-I architecture to develop an open-source PDF manipulation program.",
+                "Leveraged Apache PDFBox Library to manipulate PDFs."
+            ]
+        },
+        "SquadGames": {
+            "github": "https://github.com/HadiS05/SquadGamesAndroid",
+            "description": "Native Android party game application.",
+            "date": "June 2026 — Present",
+            "role": "Creator",
+            "points": [
+                "Utilized Jetpack Compose and Kotlin to develop a native Android party game app.",
+                "Learned about MVVM architecture, process death and data persistence.",
+                "Maintained a non-relational local database storing user information in JSON."
+            ]
+        },
+        "McMaster Self-Serve Kiosk": {
+            "github": "https://github.com/HadiS05/McMasterSelfServeApp",
+            "description": "Award-winning (Ember Hackathon @ McMaster University) Python MVP of a self-serve kiosk application.",
+            "date": "August 2023",
+            "role": "Creator",
+            "points": [
+                "Used KivyMD and Python to develop an MVP application for a self-serve kiosk concept."
+            ]
+        }
+    },
+    "resume": {
+        "file": "/assets/docs/resume.pdf"
+    },
+    "about": {
+        "name": "Hadi Shaheryar",
+        "description": "4th year Computer Science undergraduate at McMaster University.",
+        "hobbies": {
+            "Programming, programming, and...programming" : {
+                "description": "I love to build. And I believe one of the most accessible ways to build is by software!"
+            },
+            "Sports": {
+                "description": "I'm a huge fan of (European) football and cricket. I've seen a lot of highs and lows, but I push through! C'mon United!"
+            },
+            "Reading": {
+                "description": "If I find the time, I greatly enjoy a good book. Some of my favourite authors include Dickens and Dostoevsky."
+            },
+            "History & Politics": {
+                "description": "I love learning about all sorts of history: the rise and fall of empires, their military and economic infrastructures, and the impacts their choices have on us today."
+            },
+            "Video Games": {
+                "description": "The list is simply not complete without games! Some of my favourites are FIFA (15 and 18 especially), the Arkham trilogy, Spider-Man, Assassins Creed, Horizon Zero Down, and so many more."
+            }
+        },
+        "academics": {
+            "McMaster University": {
+                "description": "Currently in my 4th year of undergraduate studies in Computer Science (CO-OP).",
+                "date": "September 2023 — Present (Expected 2028)",
+                "gpa": "3.5",
+                "relevant_courses": [
+                    "Data Structures & Algorithms",
+                    "Algorithms & Analysis",
+                    "Signals and Systems",
+                    "Discrete Mathematics",
+                    "Engineering Calculus (I, II, and III)",
+                    "Linear Algebra",
+                    "Computer Networks and Security",
+                    "Compilers",
+                    "Principles of Programming"
+                ]
+            }
+        },
+        "work_experience": {
+            "Assistant Software Developer (Co-Op)" : {
+                "location": "Mississauga, ON",
+                "date": "May 2025 — Present",
+                "Company": "Safety Power Inc."
+            },
+            "Freelance Software Developer": {
+                "location": "Remote",
+                "date": "October 2025 — December 2025",
+                "company": "Lingobility"
+            }
+        }
+    },
+    "contact": {
+        "email": "haditutoring@gmail.com",
+        "phone": "123-456-7890"
+    }
+}
