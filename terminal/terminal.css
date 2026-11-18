@@ -11,6 +11,14 @@ this .terminal-screen {
     color: green;
 }
 
+this .terminal-screen::-webkit-scrollbar {
+    width: 5px;
+}
+
+this .terminal-screen::-webkit-scrollbar-track {
+    color: black;
+}
+
 this .terminal-input {
     text-decoration: none;
     background-color: inherit;

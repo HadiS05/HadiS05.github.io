@@ -21,6 +21,7 @@ this .status-bar {
     flex-direction: row;
     gap: 1px;
     justify-content: end;
+    align-items: center;
     width: 100%;
     cursor: grab;
     user-select: none;

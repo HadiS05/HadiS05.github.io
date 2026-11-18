@@ -10,7 +10,7 @@
  */
 
 !async function($) {
-    $.loadView = async function (app, desktop, options) {
+    $.loadView = async function (app, desktop, options = {}) {
         if (!app) {
             console.error("app must be an html element");
         }
@@ -170,6 +170,17 @@
             statusBar.releasePointerCapture(e.pointerId);
             statusBar.removeEventListener("pointermove", onPointerMove);
         });
+
+        if (options.title) {
+            const titleText = apploaderHtml.querySelector(".status-bar .title-text");
+            titleText.textContent = options.title;
+        }
+
+        if (options.icon) {
+            const appIcon = apploaderHtml.querySelector(".status-bar .icon");
+            appIcon.innerHTML = options.icon;
+            appIcon.class
+        }
 
         desktop.append(apploaderHtml);
         // Fade in

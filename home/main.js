@@ -163,6 +163,11 @@ async function init () {
     const program = app.dataset.app;
     const taskBarApps = config["task_bar_apps"];
 
+    const options = {
+      icon: await fetchIcon(taskBarApps[program].icon),
+      title: taskBarApps[program].title
+    }
+
     // Find the corresponding taskbar app
     let taskApp = taskBar.querySelector(`[data-app=${program}]`);
 
@@ -180,7 +185,7 @@ async function init () {
     const appClick = async (e) => {
 
       if (!app.window) {
-        app.window = await loadView(app, desktop);
+        app.window = await loadView(app, desktop, options);
       }
 
       if (app.window?.minimized) {
@@ -213,7 +218,7 @@ async function init () {
 
       do {
         if (!app.window) {
-          app.window = await loadView(app, desktop);
+          app.window = await loadView(app, desktop, options);
           break;
         }
 
